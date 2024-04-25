@@ -70,7 +70,7 @@ module.exports = {
   deleted: true,
   name: 'kick',
   description: 'Kicks a member!!!',
-  devOnly: true,
+  // devOnly: true,
   //testOnly: true,
   options: [
     {

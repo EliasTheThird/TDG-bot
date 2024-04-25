@@ -1,55 +1,55 @@
 const {
-  ApplicationCommandOptionType,
-  Client,
-  Interaction,
-} = require('discord.js');
-
-module.exports = {
-  /**
-   *
-   * @param {Client} client
-   * @param {Interaction} interaction
-   */
-  callback: async (client, interaction) => {
-    // Get description from options
-    const description = interaction.options.getString('description');
-
-    // Set cooldown key
-    const cooldownKey = `${interaction.user.id}-revive`;
-    const cooldown = 30 * 60 * 1000; // 30 minutes in milliseconds
-
-    // Check if cooldown is still in effect
-    if (
-      client.cooldowns.has(cooldownKey) &&
-      Date.now() - client.cooldowns.get(cooldownKey) < cooldown
-    ) {
-      await interaction.reply({
-        content: 'This command is on cooldown. Please wait.',
-        ephemeral: true,
-      });
-      return;
-    }
-
-    // Set new cooldown time
-    client.cooldowns.set(cooldownKey, Date.now());
-
-    // Reply with the message
-    await interaction.reply(
-      `Revive action performed with description: ${description}`
-    );
-  },
-    deleted: true,
-  name: 'revive',
-  description: 'Revives a user or system with a given description!',
-  devOnly: false,
-  options: [
-    {
-      name: 'description',
-      description: 'Description of the revive.',
-      required: true,
-      type: ApplicationCommandOptionType.String,
+    ApplicationCommandOptionType,
+    Client,
+    Interaction,
+  } = require('discord.js');
+  
+  module.exports = {
+    /**
+     *
+     * @param {Client} client
+     * @param {Interaction} interaction
+     */
+    callback: async (client, interaction) => {
+      if (!client.cooldowns) {
+        client.cooldowns = new Map();
+      }
+  
+      let description = interaction.options.getString('description');
+  
+      // Remove mentions from the description
+      description = description.replace(/<@!?(\d+)>/g, `Don't try and bypass smh`).replace(/<@&(\d+)>/g, `Don't try and bypass smh`);
+  
+      const cooldownKey = `${interaction.user.id}-revive`;
+      const cooldown = 30 * 60 * 1000; // 30 minutes in milliseconds
+  
+      if (client.cooldowns.has(cooldownKey) && Date.now() - client.cooldowns.get(cooldownKey) < cooldown) {
+        await interaction.reply({
+          content: 'This command is on cooldown. Please wait.',
+          ephemeral: true,
+        });
+        return;
+      }
+  
+      client.cooldowns.set(cooldownKey, Date.now());
+  
+      const roleId = '1232810899484704890';
+      const messageContent = `<@&${roleId}> - ${description}`;
+  
+      await interaction.reply({ content: messageContent, allowedMentions: { parse: ['roles'] } });
     },
-  ],
-  permissionsRequired: [], // Assuming no special Discord permissions are required
-  botPermissions: [], // Assuming no special bot permissions are required
-};
+    name: 'revive',
+    description: 'Ping the Revive Chat role!',
+    devOnly: false,
+    options: [
+      {
+        name: 'description',
+        description: 'Description of the revive.',
+        required: true,
+        type: ApplicationCommandOptionType.String,
+      },
+    ],
+    permissionsRequired: [],
+    botPermissions: [],
+  };
+  

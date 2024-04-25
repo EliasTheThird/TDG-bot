@@ -17,7 +17,7 @@ module.exports = {
     const targetUserId = interaction.options.get('target-user').value;
     const reason =
       interaction.options.get('reason')?.value ||
-      'User forgot to enter a reason lol.';
+      `${interaction.user} forgot to enter a reason lol.`;
 
     await interaction.deferReply();
 
@@ -46,7 +46,7 @@ module.exports = {
 
     if (targetUserRolePosition >= botRolePosition) {
       await interaction.editReply(
-        "I can't ban that user, they are too powerful..."
+        "I can't ban that user, they're too powerful..."
       );
       return;
     }
@@ -61,22 +61,19 @@ module.exports = {
 
     // Reply with the embed
     await interaction.editReply({
+      content: `L ${interaction.user} thought you could ban someone... Skill Issue!`,
       embeds: [embed],
-    });
-    // Reply with Skill Issue
-    await interaction.followUp({
-      content: `L ${interaction.user} thought you could ban someone... Skill Issue!`
     });
   },
 
   //deleted: true,
   name: 'ban',
   description: 'Bans a member!!!',
-  devOnly: true,
-  //testOnly: true,
+  // devOnly: true,
+  // testOnly: true,
   options: [
     {
-      name: 'target-user',
+      name: 'user',
       description: 'The user you want to ban.',
       required: true,
       type: ApplicationCommandOptionType.Mentionable,
@@ -87,6 +84,6 @@ module.exports = {
       type: ApplicationCommandOptionType.String,
     },
   ],
-  permissionsRequired: [PermissionFlagsBits.BanMembers],
-  botPermissions: [PermissionFlagsBits.BanMembers],
+  // permissionsRequired: [PermissionFlagsBits.BanMembers],
+  // botPermissions: [PermissionFlagsBits.BanMembers],
 };

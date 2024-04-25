@@ -27,7 +27,7 @@ module.exports = {
     }
 
     // ID of Blacklisted Role
-    const protectedRoleId = '1143968250452000788';
+    const protectedRoleId = '1130293554279886908';
     // Check if the member has the protected role
     if (member.roles.cache.has(protectedRoleId)) {
       await interaction.reply({
@@ -104,6 +104,6 @@ module.exports = {
       required: false,
     },
   ],
-  permissionsRequired: [PermissionFlagsBits.Administrator],
-  botPermissions: [PermissionFlagsBits.Administrator],
+  // permissionsRequired: [PermissionFlagsBits.Administrator],
+  // botPermissions: [PermissionFlagsBits.Administrator],
 };
