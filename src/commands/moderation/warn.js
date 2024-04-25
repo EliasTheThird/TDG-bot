@@ -26,41 +26,45 @@ module.exports = {
       return;
     }
 
-    // ID of Blacklisted Role
-    const protectedRoleId = '1130293554279886908';
-    // Check if the member has the protected role
-    if (member.roles.cache.has(protectedRoleId)) {
-      await interaction.reply({
-        content: 'This user is protected from being warned, L',
-      });
-      return;
-    }
-
     if (member.id === interaction.guild.ownerId) {
-      await interaction.reply("You can't ban Dario silly.");
+      await interaction.reply("You can't warn Dario silly.");
       return;
     }
 
-    if (member.roles.highest.position >= issuer.roles.highest.position) {
+    // 1130293554279886908 - Creator Id || 1062828085256400896 - Admin
+    // Array of Blacklisted Role IDs
+    const protectedRoleIds = ['1130293554279886908', '1062828085256400896',];
+    // Check if the member has any of the protected roles
+    if (protectedRoleIds.some(roleId => member.roles.cache.has(roleId))) {
       await interaction.reply({
-        content: 'You cannot warn Dario silly.',
+        content: 'This user is protected from being warned, L!',
       });
       return;
     }
-    // Comparing role positions
-    if (member.roles.highest.position >= issuer.roles.highest.position) {
-      await interaction.reply({
-        content: 'You cannot warn someone with an equal or higher role.',
-      });
-      return;
-    }
+    
+    // Array of possible default reasons
+    const defaultReasons = [
+      'Your activities have been noted and require moderation.',
+      'Imagine being warned, L!',
+      'Youre a silly goose, oink!',
+      'Simping for TrainerDario',
+      'EliasTheThird is my favourite! 🖤',
+      'Being a nerd! 🤓',
+      'Being a skill issue!',
+      'LMAO IMAGINE 🤣'
+    ];
+
+    // Selecting a random reason if none is provided
+    const reason = interaction.options.getString('reason') || defaultReasons[Math.floor(Math.random() * defaultReasons.length)];
+
+    /*
     const reason =
       interaction.options.getString('reason') ||
       'Your activities have been noted and require moderation.';
+    */
 
     const embed = new EmbedBuilder()
       .setTitle('Warning Notice')
-      .setDescription('You have been warned!')
       .setColor('Random')
       .setThumbnail(user.displayAvatarURL())
       .addFields(

@@ -20,7 +20,8 @@ const {
       // Remove mentions from the description
       description = description.replace(/<@!?(\d+)>/g, `Don't try and bypass smh`).replace(/<@&(\d+)>/g, `Don't try and bypass smh`);
   
-      const cooldownKey = `${interaction.user.id}-revive`;
+      // const cooldownKey = `${interaction.user.id}-revive`; // per person cooldown
+      const cooldownKey = 'global-revive-cooldown'; // global cooldown
       const cooldown = 30 * 60 * 1000; // 30 minutes in milliseconds
   
       if (client.cooldowns.has(cooldownKey) && Date.now() - client.cooldowns.get(cooldownKey) < cooldown) {

@@ -37,12 +37,14 @@ module.exports = {
     const requestUserRolePosition = interaction.member.roles.highest.position; // Highest role of the user running the cmd
     const botRolePosition = interaction.guild.members.me.roles.highest.position; // Highest role of the bot
 
-    if (targetUserRolePosition >= requestUserRolePosition) {
+    /*
+    if (targetUserRolePosition > requestUserRolePosition) {
       await interaction.editReply(
         "You can't ban that person."
       );
       return;
     }
+    */
 
     if (targetUserRolePosition >= botRolePosition) {
       await interaction.editReply(
@@ -61,7 +63,7 @@ module.exports = {
 
     // Reply with the embed
     await interaction.editReply({
-      content: `L ${interaction.user} thought you could ban someone... Skill Issue!`,
+      content: `L ${interaction.user} thought they could ban someone... Skill Issue!`,
       embeds: [embed],
     });
   },
@@ -73,7 +75,7 @@ module.exports = {
   // testOnly: true,
   options: [
     {
-      name: 'user',
+      name: 'target-user',
       description: 'The user you want to ban.',
       required: true,
       type: ApplicationCommandOptionType.Mentionable,
