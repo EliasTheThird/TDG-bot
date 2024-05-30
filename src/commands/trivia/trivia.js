@@ -1,12 +1,11 @@
 const { Client, Interaction, PermissionFlagsBits } = require('discord.js');
 const triviaQuestions = require('../../database/trivia-database');
 
-
 let currentQuestion = null;
 let currentWinner = null;
 const roleId = '1161113839883010089'; // The ID of the role to be given to the winner
 const channelId = '1095238175187816449'; // The ID of the channel to post trivia questions in
-let triviaLoopRunning = false; 
+let triviaLoopRunning = false;
 
 module.exports = {
   /**
@@ -52,7 +51,7 @@ module.exports = {
 
 async function startTriviaLoop(guild, channel) {
   while (triviaLoopRunning) {
-    const delay = getRandomInt(30000, 60000); // Random delay between 15 and 30 seconds
+    const delay = getRandomInt(30000, 60000); // Random delay between 30 and 60 seconds
     await new Promise(resolve => setTimeout(resolve, delay));
 
     await removePreviousWinnerRole(guild, channel); // Remove the role from the previous winner and notify
@@ -60,11 +59,19 @@ async function startTriviaLoop(guild, channel) {
     await postTriviaQuestion(channel); // Post a new trivia question
 
     const filter = response => {
-      return currentQuestion && response.content.toLowerCase() === currentQuestion.answer.toLowerCase();
+      if (currentQuestion) {
+        const { answer } = currentQuestion;
+        if (Array.isArray(answer)) {
+          return answer.some(a => response.content.toLowerCase() === a.toLowerCase());
+        } else {
+          return response.content.toLowerCase() === answer.toLowerCase();
+        }
+      }
+      return false;
     };
 
     try {
-      const collected = await channel.awaitMessages({ filter, max: 1, time: 15000, errors: ['time'] }); // Wait for 10 seconds for the correct answer
+      const collected = await channel.awaitMessages({ filter, max: 1, time: 15000, errors: ['time'] }); // Wait for 15 seconds for the correct answer
       const winner = collected.first().author;
 
       currentWinner = winner;
